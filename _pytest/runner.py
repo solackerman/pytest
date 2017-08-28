@@ -64,15 +64,21 @@ def runtestprotocol(item, log=True, nextitem=None):
     hasrequest = hasattr(item, "_request")
     if hasrequest and not item._request:
         item._initrequest()
+    print('setting up')
     rep = call_and_report(item, "setup", log)
+    print('set up')
     reports = [rep]
     if rep.passed:
         if item.config.option.setupshow:
             show_test_item(item)
         if not item.config.option.setuponly:
+            print('calling up')
             reports.append(call_and_report(item, "call", log))
+            print('called up')
+    print('tearing down')
     reports.append(call_and_report(item, "teardown", log,
         nextitem=nextitem))
+    print('torn down')
     # after all teardown hooks have been called
     # want funcargs and request info to go away
     if hasrequest:
@@ -124,6 +130,7 @@ def pytest_report_teststatus(report):
 # Implementation
 
 def call_and_report(item, when, log=True, **kwds):
+    print('enter call_and_report')
     call = call_runtest_hook(item, when, **kwds)
     hook = item.ihook
     report = hook.pytest_runtest_makereport(item=item, call=call)
@@ -131,6 +138,7 @@ def call_and_report(item, when, log=True, **kwds):
         hook.pytest_runtest_logreport(report=report)
     if check_interactive_exception(call, report):
         hook.pytest_exception_interact(node=item, call=call, report=report)
+    print('exit call_and_report')
     return report
 
 def check_interactive_exception(call, report):
@@ -154,11 +162,15 @@ class CallInfo:
         self.when = when
         self.start = time()
         try:
+            print('RUNNING TEST')
             self.result = func()
+            print('TEST COMPLETED!')
         except KeyboardInterrupt:
+            print('KeyboardInterrupt :( ')
             self.stop = time()
             raise
         except:
+            print('TEST COMPLETED :( ')
             self.excinfo = ExceptionInfo()
         self.stop = time()
 
