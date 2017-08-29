@@ -59,9 +59,9 @@ def main():
         version='3.1.3',
         description='pytest: simple powerful testing with Python',
         long_description=long_description,
-        use_scm_version={
-            'write_to': '_pytest/_version.py',
-        },
+        # use_scm_version={
+        #     'write_to': '_pytest/_version.py',
+        # },
         url='http://pytest.org',
         license='MIT license',
         platforms=['unix', 'linux', 'osx', 'cygwin', 'win32'],
@@ -72,7 +72,7 @@ def main():
         keywords="test unittest",
         cmdclass={'test': PyTest},
         # the following should be enabled for release
-        setup_requires=['setuptools-scm'],
+        # setup_requires=['setuptools-scm'],
         install_requires=install_requires,
         extras_require=extras_require,
         packages=['_pytest', '_pytest.assertion', '_pytest._code', '_pytest.vendored_packages'],
